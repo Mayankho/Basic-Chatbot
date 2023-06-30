@@ -13,7 +13,7 @@ export default function Home() {
   const [theInput, setTheInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState([{
-    role: "Assistant",
+    role: "assistant",
     content: "Hey there, this is Yaya bot! Ask away"
   }]);
 
@@ -35,12 +35,28 @@ export default function Home() {
       body: JSON.stringify({ messages }),
     });
 
-    const data = await response.json();
-    const { output } = data;
+    if (!response.ok) {
+      console.log('HTTP error', response.status);
+    } else {
+      try {
+        const data = await response.json();
+        // ... your existing code ...
+        const { output } = data;
     console.log("OpenAI replied...", output.content);
 
     setMessages((prevMessages) => [...prevMessages, output]);
     setIsLoading(false);
+      } catch (error) {
+        console.log('JSON parsing error', error);
+      }
+    }
+
+    // const data = await response.json();
+    // const { output } = data;
+    // console.log("OpenAI replied...", output.content);
+
+    // setMessages((prevMessages) => [...prevMessages, output]);
+    // setIsLoading(false);
 
   };
 
